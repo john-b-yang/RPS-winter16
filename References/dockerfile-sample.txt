@@ -1,0 +1,4 @@
+FROM ubuntu:latest
+
+ADD client/main /usr/local/bin/
+CMD ["main", "-whichFunc=server", "-port=6521"]
