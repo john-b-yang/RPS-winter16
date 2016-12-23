@@ -28,7 +28,12 @@ func main() {
 This function will be called twice
 */
 func client() {
-
+	clientConn, err := net.Dial("tcp", "TBD: IP ADDRESS")
+	if err != nil {
+		fmt.Println("Client Connection Error: ", err)
+		return
+	}
+	fmt.Println("Client Connection Established Successfully")
 }
 
 /*
