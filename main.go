@@ -26,6 +26,10 @@ func main() {
 
 /*
 This function will be called twice
+
+TBD List
+-IP address
+-Port Number
 */
 func client() {
 	clientConn, err := net.Dial("tcp", "TBD: IP ADDRESS")
@@ -33,7 +37,48 @@ func client() {
 		fmt.Println("Client Connection Error: ", err)
 		return
 	}
-	fmt.Println("Client Connection Established Successfully")
+	//Print out connection
+	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
+	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
+
+	play := askForPlay() //Retrieve Player Choice
+
+	/* TBD: The code for diffrentiating which client is called from which computer. Also must establish how we compare one player's code to another
+
+	Another matter, do we print different messages to different terminals? For example, if player picks rock and opponent picks scissors, do the two player see the same message or different outputs?*/
+
+	//FOR NOW we will use "opponent" to represent other player's pick.
+	opponent := "Filler"
+	if play == opponent {
+		fmt.Println("Draw!")
+	}
+	else if play == "R" {
+		if opponent == "S" {
+			fmt.Println("Player picked rock, opponent picked scissors, opponent wins!")
+		} else if opponent == "P" {
+			fmt.Println("Player picked rock, opponent picked scissors, opponent wins!")
+		}
+	}
+	else if play == "S" {
+
+	} else {
+
+	}
+}
+
+/* Client Helper Functions */
+func askForPlay() {
+	for {
+		fmt.Println("Please type in R (Rock), P (Paper), or S (Scissors)")
+		playPointer := flag.String("Play", "None", "Enter R, P, or S")
+		flag.Parse()
+
+		if *playPointer != "R" && play != "P" && play != "S" {
+			fmt.Println("Your choice cannot be interpretted")
+		} else {
+			return *playPointer
+		}
+	}
 }
 
 /*
