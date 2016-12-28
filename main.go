@@ -68,7 +68,7 @@ func askForPlay() {
 		playPointer := flag.String("Play", "None", "Enter R, P, or S")
 		flag.Parse()
 
-		if *playPointer != "R" && play != "P" && play != "S" {
+		if *playPointer != "R" && *playPointer != "P" && *playPointer != "S" {
 			fmt.Println("Your choice cannot be interpretted")
 		} else {
 			return *playPointer
