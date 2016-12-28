@@ -49,20 +49,15 @@ func client() {
 
 	//FOR NOW we will use "opponent" to represent other player's pick.
 	opponent := "Filler"
+	fmt.Println("Player picked ", play, " opponent picked ", opponent, ". ")
 	if play == opponent {
 		fmt.Println("Draw!")
 	}
-	else if play == "R" {
-		if opponent == "S" {
-			fmt.Println("Player picked rock, opponent picked scissors, opponent wins!")
-		} else if opponent == "P" {
-			fmt.Println("Player picked rock, opponent picked scissors, opponent wins!")
-		}
+	else if (play == "R" && opponent == "S") || (play == "S" && opponent == "P") || (play == "P" && opponent == "R") {
+		fmt.Println("Player Wins!")
 	}
-	else if play == "S" {
-
-	} else {
-
+	else {
+		fmt.Println("Opponent Wins!")
 	}
 }
 
