@@ -47,6 +47,7 @@ func client(ipAddress string, port int) {
 		opponentMove := opponentAskForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round)
+		printStage(playerScore, opponentScore)
 
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
 	        fmt.Println("Send failed:", err)
@@ -83,13 +84,25 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 		fmt.Println("Draw! An extra game will be played!")
 		round += 1
 	}
-	else if (playerMove == "R" && opponentMove == "S") || (playerMove == "S" && opponentMove == "P") || (playerMove == "P" && opponentMove == "R") {
-		fmt.Println("Player Wins!")
+	else if playerMove == "R" && opponentMove == "S", playerMove == "S" && opponentMove == "P", playerMove == "P" && opponentMove == "R" {
+		fmt.Println("Player wins this round!")
 		playerScore += 1
 	}
 	else {
-		fmt.Println("Opponent Wins!")
+		fmt.Println("Opponent wins this round!")
 		opponentScore += 1
+	}
+}
+
+func printStage(playerScore int, opponentScore int) ->  {
+	if playerScore == 2 {
+		fmt.Printf("Player wins the game by a score of (%d)-(%d)!", playerScore, opponentScore)
+	} else if opponentScore == 2 {
+		fmt.Printf("Opponent wins the game by a score of (%d)-(%d)!", opponentScore, playerScore)
+		return true
+	} else {
+		fmt.Println("Next Round!")
+		return false
 	}
 }
 
