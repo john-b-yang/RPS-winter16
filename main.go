@@ -24,15 +24,21 @@ func main() {
 	ipAddress := flag.String("ipAddress", "169.229.50.175", "Input IP Address")
 	port := flag.Int("port", 8333, "Input Port Number")
     flag.Parse()
+	//Organize these two somehow
 	client(*ipAddress, *port)
+	server(*port)
 }
 
 func client(ipAddress string, port int) {
+	//Concatenating ipAddress and port number
 	iPAddPort := fmt.Sprintf("%s:%d", ipAddress, port)
+	//Create and test client connection
 	clientConn, err := net.Dial("tcp", iPAddPort)
 	if err != nil {
 		fmt.Println("Client Connection Error: ", err)
 		return
+	} else {
+		fmt.Println("Client Connection Established")
 	}
 	reader := bufio.NewReader(clientConn)
 	//Print out connection
@@ -109,6 +115,23 @@ func printStage(playerScore int, opponentScore int) ->  {
 /*
 This function will be called once
 */
-func server() {
+func server(port int) {
+	portString := fmt.Sprintf(":%d", port)
 
+	//Listening
+	ln, err := net.Listen("tcp", portString) //Same Port Number as Client's
+	if err != nil {
+		fmt.Println("Listen failed:", err)
+		os.Exit(1)
+	} else {
+		fmt.Println("Listening Passed")
+	}
+
+	//Accepting
+	serverConn, err := ln.Accept()
+	if err != nil {
+		fmt.Println("Accept failed:", err)
+		os.Exit(1)
+	}
+	reader := bufio.NewReader(serverConn)
 }

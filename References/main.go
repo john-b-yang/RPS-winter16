@@ -45,8 +45,8 @@ var message string = "Hello"
 //Function Call
 func main() {
 	clientOrServer := flag.String("whichFunc", "filler", "client or server")
-        ipAddress := flag.String("ipAddress", "169.229.50.175", "input ip address")
-        port := flag.Int("port", 6521, "input port number")
+    ipAddress := flag.String("ipAddress", "169.229.50.175", "input ip address")
+    port := flag.Int("port", 6521, "input port number")
 	flag.Parse()
 
 	parameter := *clientOrServer
@@ -125,7 +125,7 @@ func client(ipAddress string, port int) {
 
 func server(port int) {
 	//Listen function creates server
-        portString := fmt.Sprintf(":%d", port)
+    portString := fmt.Sprintf(":%d", port)
 	ln, err := net.Listen("tcp", portString) //Network, IP Address:Port (Must be same as client's)
 	if err != nil {
 		fmt.Println("Listen failed:", err)
