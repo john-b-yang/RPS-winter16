@@ -1,5 +1,6 @@
 /*
- * Designated import statements and necessary packages
+ * Rock Paper Scissors
+ * Best 2 out of 3
  */
 package main
 
@@ -10,6 +11,7 @@ import (
 	"os"
 	"time"
 	"flag"
+	"rand"
 )
 
 /*
@@ -19,46 +21,31 @@ For two people to play, we want to call the server function once and client func
 We will also need to diffrentiate between the two clients based on their computer assigned port values.
 */
 func main() {
-	ipAddress := flag.String("ipAddress", "Default", "Input IP Address")
-	port := flag.Int("port", 0000, "Input Port Number")
+	ipAddress := flag.String("ipAddress", "169.229.50.175", "Input IP Address")
+	port := flag.Int("port", 8333, "Input Port Number")
     flag.Parse()
 }
 
-/*
-This function will be called twice
+func client(ipAddress string, port int) {
+	numOfGames := 3
+	playerScore := 0
+	opponentScore := 0
 
-TBD List
--IP address
--Port Number
-*/
-func client() {
-	clientConn, err := net.Dial("tcp", "TBD: IP ADDRESS")
+	clientConn, err := net.Dial("tcp", ipAddress)
 	if err != nil {
 		fmt.Println("Client Connection Error: ", err)
 		return
 	}
+	reader := bufio.NewReader(clientConn)
+
 	//Print out connection
 	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
 	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 
-	play := askForPlay() //Retrieve Player Choice
-
-	/* TBD: The code for diffrentiating which client is called from which computer. Also must establish how we compare one player's code to another
-
-	Another matter, do we print different messages to different terminals? For example, if player picks rock and opponent picks scissors, do the two player see the same message or different outputs?*/
-
-	//FOR NOW we will use "opponent" to represent other player's pick.
-	opponent := "Filler"
-	fmt.Println("Player picked ", play, " opponent picked ", opponent, ". ")
-	if play == opponent {
-		fmt.Println("Draw!")
-	}
-	else if (play == "R" && opponent == "S") || (play == "S" && opponent == "P") || (play == "P" && opponent == "R") {
-		fmt.Println("Player Wins!")
-	}
-	else {
-		fmt.Println("Opponent Wins!")
-	}
+	playerMove := askForPlay() //Retrieve Player Choice
+	opponentMove := opponentAskForPlay()
+	fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
+	determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, numOfGames)
 }
 
 /* Client Helper Functions */
@@ -73,6 +60,27 @@ func askForPlay() {
 		} else {
 			return *playPointer
 		}
+	}
+}
+
+func opponentAskForPlay() {
+	var moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
+	return moveDictionary[rand.Intn(3)]
+}
+
+func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, numOfGames int) {
+	numOfGames -= 1
+	if playerMove == opponentMove {
+		fmt.Println("Draw! An extra game will be played!")
+		numOfGames += 1
+	}
+	else if (playerMove == "R" && opponentMove == "S") || (playerMove == "S" && opponentMove == "P") || (playerMove == "P" && opponentMove == "R") {
+		fmt.Println("Player Wins!")
+		playerScore += 1
+	}
+	else {
+		fmt.Println("Opponent Wins!")
+		opponentScore += 1
 	}
 }
 
