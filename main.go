@@ -24,25 +24,26 @@ func main() {
 	ipAddress := flag.String("ipAddress", "169.229.50.175", "Input IP Address")
 	port := flag.Int("port", 8333, "Input Port Number")
     flag.Parse()
+	client(*ipAddress, *port)
 }
 
 func client(ipAddress string, port int) {
+	iPAddPort := fmt.Sprintf("%s:%d", ipAddress, port)
+	clientConn, err := net.Dial("tcp", iPAddPort)
+	if err != nil {
+		fmt.Println("Client Connection Error: ", err)
+		return
+	}
+	reader := bufio.NewReader(clientConn)
+	//Print out connection
+	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
+	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
+
 	numOfGames := 3
 	playerScore := 0
 	opponentScore := 0
 
-    for round := 0; round < numOfGames; round++ {
-		clientConn, err := net.Dial("tcp", ipAddress)
-		if err != nil {
-			fmt.Println("Client Connection Error: ", err)
-			return
-		}
-		reader := bufio.NewReader(clientConn)
-
-		//Print out connection
-		fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
-		fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
-
+    for round := 0; round < numOfGames; round++ {}
 		playerMove := askForPlay() //Retrieve Player Choice
 		opponentMove := opponentAskForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
@@ -54,7 +55,6 @@ func client(ipAddress string, port int) {
 	        os.Exit(1)
 	    }
 	}
-
 	clientConn.close()
 }
 
