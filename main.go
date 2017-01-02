@@ -31,21 +31,30 @@ func client(ipAddress string, port int) {
 	playerScore := 0
 	opponentScore := 0
 
-	clientConn, err := net.Dial("tcp", ipAddress)
-	if err != nil {
-		fmt.Println("Client Connection Error: ", err)
-		return
+    for round := 0; round < numOfGames; round++ {
+		clientConn, err := net.Dial("tcp", ipAddress)
+		if err != nil {
+			fmt.Println("Client Connection Error: ", err)
+			return
+		}
+		reader := bufio.NewReader(clientConn)
+
+		//Print out connection
+		fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
+		fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
+
+		playerMove := askForPlay() //Retrieve Player Choice
+		opponentMove := opponentAskForPlay()
+		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
+		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round)
+
+		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
+	        fmt.Println("Send failed:", err)
+	        os.Exit(1)
+	    }
 	}
-	reader := bufio.NewReader(clientConn)
 
-	//Print out connection
-	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
-	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
-
-	playerMove := askForPlay() //Retrieve Player Choice
-	opponentMove := opponentAskForPlay()
-	fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
-	determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, numOfGames)
+	clientConn.close()
 }
 
 /* Client Helper Functions */
@@ -68,11 +77,11 @@ func opponentAskForPlay() {
 	return moveDictionary[rand.Intn(3)]
 }
 
-func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, numOfGames int) {
-	numOfGames -= 1
+func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) {
+	round -= 1
 	if playerMove == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
-		numOfGames += 1
+		round += 1
 	}
 	else if (playerMove == "R" && opponentMove == "S") || (playerMove == "S" && opponentMove == "P") || (playerMove == "P" && opponentMove == "R") {
 		fmt.Println("Player Wins!")
