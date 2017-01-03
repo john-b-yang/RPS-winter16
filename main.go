@@ -29,6 +29,10 @@ func main() {
 	server(*port)
 }
 
+/*
+So this client currently only works between a human and computer
+But we don't really want that
+*/
 func client(ipAddress string, port int) {
 	//Concatenating ipAddress and port number
 	iPAddPort := fmt.Sprintf("%s:%d", ipAddress, port)
@@ -134,4 +138,25 @@ func server(port int) {
 		os.Exit(1)
 	}
 	reader := bufio.NewReader(serverConn)
+
+	numOfGames := 3
+	for i := 0; i < numOfGames; i++ {
+		//Received Message
+		recvMsgBytes, err := reader.ReadBytes('\n')
+		if err != nil {
+			fmt.Println("Receive failed:", err)
+			os.Exit(1)
+		}
+		fmt.Printf("(%d) Received: %s", i, string(recvMsgBytes))
+
+		//Sending Message, to be modified for RPS
+		//Here is where you create strategy for server
+		fmt.Printf("(%d) Sending: %s\n", i, "TO BE COMPLETED") //MARK
+
+		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
+			fmt.Println("Send failed:", err)
+			os.Exit(1)
+		}
+	}
+	serverConn.close()
 }
