@@ -21,12 +21,20 @@ For two people to play, we want to call the server function once and client func
 We will also need to diffrentiate between the two clients based on their computer assigned port values.
 */
 func main() {
-	ipAddress := flag.String("ipAddress", "169.229.50.175", "Input IP Address")
-	port := flag.Int("port", 8333, "Input Port Number")
+	//Playing against Ashwarya
+	JohnIPAddress := flag.String("John's ipAddress", "169.229.50.175", "Input IP Address")
+	JohnPort := flag.Int("John's port", 6421, "Input Port Number")
+	AshIPAddress := flag.String("Ash's ipAddress", "169.229.50.188", "Input IP Address")
+	AshPort := flag.String("Ash's port", 8333, "Input Port Number")
     flag.Parse()
-	//Organize these two somehow
-	client(*ipAddress, *port)
-	server(*port)
+	//Organize this into conditionals
+
+	//If I play against myself
+	client(*JohnIPAddress, *JohnPort)
+	//If I play against Ashwarya
+	client(*AshIPAddress, *AshPort)
+	//Instantiating Server code
+	server(*JohnPort)
 }
 
 /*
@@ -150,8 +158,17 @@ func server(port int) {
 		fmt.Printf("(%d) Received: %s", i, string(recvMsgBytes))
 
 		//Sending Message, to be modified for RPS
-		//Here is where you create strategy for server
-		fmt.Printf("(%d) Sending: %s\n", i, "TO BE COMPLETED") //MARK
+		message := string(recvMsgBytes)
+		if message == nil {
+			sengMsg := "Nil Message\n"
+		} else if message == "R" {
+			sengMsg := "P\n"
+		} else if message == "P" {
+			sengMsg := "S\n"
+		} else if message == "S" {
+			sengMsg := "R\n"
+		}
+		fmt.Printf("(%d) Sending: %s\n", i, sengMsg) //MARK
 
 		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
 			fmt.Println("Send failed:", err)
