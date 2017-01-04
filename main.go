@@ -166,7 +166,7 @@ func server(port int) {
 		} else if message == "P" {
 			sengMsg := "S\n"
 		} else if message == "S" {
-			sengMsg := "R\n"
+			sengMsg := "Rt\n"
 		}
 		fmt.Printf("(%d) Sending: %s\n", i, sengMsg) //MARK
 
