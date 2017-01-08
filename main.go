@@ -103,7 +103,7 @@ func client(ipAddress string, port int) {
 	opponentScore := 0
 
 	//Figure out how to terminate this loop
-    for round := 0; round < numOfGames; round++ {}
+    for round := 0; round < numOfGames; round++ {
 		playerMove := askForPlay() //Retrieve Player Choice
 		opponentMove := opponentAskForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
