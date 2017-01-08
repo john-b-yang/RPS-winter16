@@ -211,9 +211,9 @@ func server(port int) {
 
 		//Sending Message, to be modified for RPS
 		message := string(recvMsgBytes)
-		if message == nil {
-			sendMsg := "Nil Message\n"
-		} else if message == "R" {
+		sendMsg := "Nil Message\n"
+
+		if message == "R" {
 			sendMsg := "P\n"
 		} else if message == "P" {
 			sendMsg := "S\n"
