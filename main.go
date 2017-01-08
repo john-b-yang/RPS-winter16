@@ -212,18 +212,17 @@ func server(port int) {
 		//Sending Message, to be modified for RPS
 		message := string(recvMsgBytes)
 		if message == nil {
-			sengMsg := "Nil Message\n"
+			sendMsg := "Nil Message\n"
 		} else if message == "R" {
-			sengMsg := "P\n"
+			sendMsg := "P\n"
 		} else if message == "P" {
-			sengMsg := "S\n"
+			sendMsg := "S\n"
 		} else if message == "S" {
-			sengMsg := "R\n"
+			sendMsg := "R\n"
 		}
 		fmt.Printf("(%d) Sending: %s\n", i, sengMsg) //MARK
 
-		//MARK: What should error message be here?
-		if _, err := serverConn.Write([]byte(message)); err != nil {
+		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
 		}
