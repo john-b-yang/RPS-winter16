@@ -127,7 +127,7 @@ func client(ipAddress string, port int) {
 /* Client Helper Functions */
 
 //Prompt user for play
-func askForPlay() {
+func askForPlay() string {
 	for {
 		fmt.Println("Please type in R (Rock), P (Paper), or S (Scissors)")
 		playPointer := flag.String("Play", "None", "Enter R, P, or S")
@@ -135,6 +135,7 @@ func askForPlay() {
 
 		if *playPointer != "R" && *playPointer != "P" && *playPointer != "S" {
 			fmt.Println("Your choice cannot be interpretted")
+			return
 		} else {
 			return *playPointer
 		}
@@ -142,7 +143,7 @@ func askForPlay() {
 }
 
 //Automatic Opponent (So not a client)
-func opponentAskForPlay() {
+func opponentAskForPlay() string {
 	moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
 	return moveDictionary[rand.Intn(3)]
 }
@@ -220,7 +221,7 @@ func server(port int) {
 		} else if message == "S" {
 			sendMsg := "R\n"
 		}
-		fmt.Printf("(%d) Sending: %s\n", i, sengMsg) //MARK
+		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
 
 		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
 			fmt.Println("Send failed:", err)
