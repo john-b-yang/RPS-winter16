@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 	"flag"
-	"rand"
+	"math/rand"
 )
 
 /*
@@ -22,19 +22,41 @@ We will also need to diffrentiate between the two clients based on their compute
 */
 func main() {
 	//Playing against Ashwarya
-	JohnIPAddress := flag.String("John's ipAddress", "169.229.50.175", "Input IP Address")
-	JohnPort := flag.Int("John's port", 6421, "Input Port Number")
-	AshIPAddress := flag.String("Ash's ipAddress", "169.229.50.188", "Input IP Address")
-	AshPort := flag.String("Ash's port", 8333, "Input Port Number")
-    flag.Parse()
+	/*
+	John's IP Address: 169.229.50.175
+	John's Port: 6421
+	Ashwarya's IP Address: 169.229.50.188
+	Ashwarya'as IP Address: 8333
+	*/
 	//Organize this into conditionals
 
+	//Port + IP Address: John's then Ashwarya's
+	diff := //Diffrentiate between which port, ipAddress to use
+	port := flag.String("Port", 6421, 8333)
+	ipAddress := flag.String("IP Address", "169.229.50.175", "169.229.50.188")
+
+	//Player Type
+	player := flag.String("Player", "temp", "Please indicate whether you are a client or server")
+	opponent := flag.String("opponent", "temp", "Is your opponent a server or client?")
+
+	flag.Parse()
+
+	if *player == "server" {
+		fmt.Println("Player is a server, begin interactive server");
+		server(*port)
+	} else if *player == "client" {
+		client(*ipAddress, *port)
+	} else {
+		fmt.Println("Please enter a valid player type.")
+	}
+	/*
 	//If I play against myself
 	client(*JohnIPAddress, *JohnPort)
 	//If I play against Ashwarya
 	client(*AshIPAddress, *AshPort)
 	//Instantiating Server code
 	server(*JohnPort)
+	*/
 }
 
 /*
@@ -57,16 +79,21 @@ func client(ipAddress string, port int) {
 	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
 	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 
-	numOfGames := 3
+	numOfGames := 3 //Should this be 2? What is numOfGames, number of games to be won, or most number of games?
 	playerScore := 0
 	opponentScore := 0
 
+	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {}
 		playerMove := askForPlay() //Retrieve Player Choice
 		opponentMove := opponentAskForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
-		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round)
-		printStage(playerScore, opponentScore)
+		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
+		isGameOver := printStage(playerScore, opponentScore) //Checks whether one of the players has won
+
+		if isGameOver == true {
+			//Exit out of this loop?
+		}
 
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
 	        fmt.Println("Send failed:", err)
@@ -77,6 +104,8 @@ func client(ipAddress string, port int) {
 }
 
 /* Client Helper Functions */
+
+//Prompt user for play
 func askForPlay() {
 	for {
 		fmt.Println("Please type in R (Rock), P (Paper), or S (Scissors)")
@@ -91,16 +120,18 @@ func askForPlay() {
 	}
 }
 
+//Automatic Opponent (So not a client)
 func opponentAskForPlay() {
 	var moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
 	return moveDictionary[rand.Intn(3)]
 }
 
+//Determine the winner of a given round
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) {
-	round -= 1
+	round += 1
 	if playerMove == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
-		round += 1
+		round -= 1
 	}
 	else if playerMove == "R" && opponentMove == "S", playerMove == "S" && opponentMove == "P", playerMove == "P" && opponentMove == "R" {
 		fmt.Println("Player wins this round!")
@@ -112,9 +143,11 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 	}
 }
 
-func printStage(playerScore int, opponentScore int) ->  {
+//
+func printStage(playerScore int, opponentScore int) bool  {
 	if playerScore == 2 {
 		fmt.Printf("Player wins the game by a score of (%d)-(%d)!", playerScore, opponentScore)
+		return true
 	} else if opponentScore == 2 {
 		fmt.Printf("Opponent wins the game by a score of (%d)-(%d)!", opponentScore, playerScore)
 		return true
