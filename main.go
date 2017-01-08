@@ -95,6 +95,7 @@ func client(ipAddress string, port int) {
 	} else {
 		fmt.Println("Client Connection Established")
 	}
+
 	//Print out connection
 	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
 	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
@@ -108,7 +109,7 @@ func client(ipAddress string, port int) {
     for round := 0; round < numOfGames; round++ {
 		recvMsg, err := reader.ReadString('\n') //Replaced err w/ _ b/c not using err
 		if err != nil {
-			fmt.Println("Error Message", err)
+			fmt.Println("Error reading next play: ", err)
 			return
 		}
 
@@ -118,13 +119,13 @@ func client(ipAddress string, port int) {
 
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 		isGameOver := printStage(playerScore, opponentScore) //Checks whether one of the players has won
-		
+
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
 	        fmt.Println("Send failed:", err)
 	        os.Exit(1)
 	    }
 	}
-	clientConn.close()
+	clientConn.Close()
 }
 
 /* Client Helper Functions */
@@ -230,5 +231,5 @@ func server(port int) {
 			os.Exit(1)
 		}
 	}
-	serverConn.close()
+	serverConn.Close()
 }
