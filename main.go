@@ -16,12 +16,6 @@ import (
 	"math/rand"
 )
 
-/*
-Server ipAddress and port can be parameters
-Client port will be assigned.
-For two people to play, we want to call the server function once and client function twice.
-We will also need to diffrentiate between the two clients based on their computer assigned port values.
-*/
 func main() {
 	/*
 	John's IP Address: 169.229.50.175
@@ -41,78 +35,55 @@ func main() {
 
 	flag.Parse()
 
+	//Logic for calling client/server
 	if *player != "" && *gameMode != "" && *opponent != "" {
-		if *gameMode == "Player" {
-			fmt.Println("Called Automatic ")
+		if *gameMode == "Player" { //Person opponent
 			if *player == "server" {
-				server(*port)
+				server(*port) //Ash's Port
 			} else if *player == "client" {
-				client(*ipAddress, *port)
+				client(*ipAddress, *port) //Ash's IP Address + Port
 			}
-		} else if *gameMode == "CPU" {
+		} else if *gameMode == "CPU" { //CPU opponent
 			if *player == "server" {
-				server(*port)
+				server(*port) //John's Port
 			} else if *player == "client" {
-				client(*ipAddress, *port)
+				client(*ipAddress, *port) //John's IP Address + Port
 			}
 		}
-	} else {
+	} else { //Error Message
 		fmt.Println("Please answer all fields for the game to begin correctly")
 		return
 	}
-
-	if *player == "server" {
-		fmt.Println("Player is a server, begin interactive server");
-		server(*port)
-	} else if *player == "client" {
-		client(*ipAddress, *port)
-	} else {
-		fmt.Println("Please enter a valid player type.")
-	}
-
-	/*
-	//If I play against myself
-	client(*JohnIPAddress, *JohnPort)
-	//If I play against Ashwarya
-	client(*AshIPAddress, *AshPort)
-	//Instantiating Server code
-	server(*JohnPort)
-	*/
 }
 
-/*
-So this client currently only works between a human and computer
-But we don't really want that
-*/
 func client(ipAddress string, port int) {
-	//Concatenating ipAddress and port number
-	iPAddPort := fmt.Sprintf("%s:%d", ipAddress, port)
-	//Create and test client connection
-	clientConn, err := net.Dial("tcp", iPAddPort)
+	iPAddPort := fmt.Sprintf("%s:%d", ipAddress, port) //Concatenating ipAddress and port number
+	clientConn, err := net.Dial("tcp", iPAddPort) //Create and test client connection
 	if err != nil {
 		fmt.Println("Client Connection Error: ", err)
 		return
 	} else {
-		fmt.Println("Client Connection Established")
+		//Print out connection
+		fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
+		fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 	}
 
-	//Print out connection
-	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
-	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 	reader := bufio.NewReader(clientConn)
-
-	numOfGames := 3 //Should this be 2? What is numOfGames, number of games to be won, or most number of games?
+	numOfGames := 3 //Should this be 2? numOfGames = # of games to be won OR most # of games?
 	playerScore := 0
 	opponentScore := 0
 
 	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
+		//Receiving Message
 		recvMsg, err := reader.ReadString('\n') //recvMsg is opponent play
 		if err != nil {
 			fmt.Println("Error reading next play: ", err)
 			return
 		}
 
+		//Game Logic
+		/*********/
 		print(recvMsg) //MARK: Using recvMsg so go build will not error
 		playerMove := askForPlay() //Retrieve Player Choice
 		opponentMove := opponentAskForPlay()
@@ -125,6 +96,9 @@ func client(ipAddress string, port int) {
 		if isGameOver {
 			print("TBD: Game Over Message")
 		}
+		/*********/
+
+		//Sending Message
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
 	        fmt.Println("Send failed:", err)
 	        os.Exit(1)
@@ -185,9 +159,6 @@ func printStage(playerScore int, opponentScore int) bool  {
 	}
 }
 
-/*
-This function will be called once
-*/
 func server(port int) {
 	portString := fmt.Sprintf(":%d", port)
 
@@ -215,13 +186,13 @@ func server(port int) {
 		if err != nil {
 			fmt.Println("Receive failed:", err)
 			os.Exit(1)
+		} else {
+			fmt.Printf("(%d) Received: %s", i, string(recvMsgBytes))
 		}
-		fmt.Printf("(%d) Received: %s", i, string(recvMsgBytes))
 
 		//Sending Message, to be modified for RPS
 		message := string(recvMsgBytes)
 		var sendMsg string = "Nil Message\n"
-
 		if message == "R" {
 			sendMsg = "P\n"
 		} else if message == "P" {
@@ -229,8 +200,9 @@ func server(port int) {
 		} else if message == "S" {
 			sendMsg = "R\n"
 		}
-		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
 
+		//Sending Message
+		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
 		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
