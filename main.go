@@ -120,6 +120,10 @@ func client(ipAddress string, port int) {
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 		isGameOver := printStage(playerScore, opponentScore) //Checks whether one of the players has won
 
+		//MARK: Is this necessary + How to check if game is over
+		if isGameOver {
+			print("TBD: Game Over Message")
+		}
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
 	        fmt.Println("Send failed:", err)
 	        os.Exit(1)
@@ -215,14 +219,14 @@ func server(port int) {
 
 		//Sending Message, to be modified for RPS
 		message := string(recvMsgBytes)
-		sendMsg := "Nil Message\n"
+		var sendMsg string = "Nil Message\n"
 
 		if message == "R" {
-			sendMsg := "P\n"
+			sendMsg = "P\n"
 		} else if message == "P" {
-			sendMsg := "S\n"
+			sendMsg = "S\n"
 		} else if message == "S" {
-			sendMsg := "R\n"
+			sendMsg = "R\n"
 		}
 		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
 
