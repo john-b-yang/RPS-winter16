@@ -135,7 +135,6 @@ func askForPlay() string {
 
 		if *playPointer != "R" && *playPointer != "P" && *playPointer != "S" {
 			fmt.Println("Your choice cannot be interpretted")
-			return
 		} else {
 			return *playPointer
 		}
