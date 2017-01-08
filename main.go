@@ -141,7 +141,7 @@ func askForPlay() {
 
 //Automatic Opponent (So not a client)
 func opponentAskForPlay() {
-	var moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
+	moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
 	return moveDictionary[rand.Intn(3)]
 }
 
