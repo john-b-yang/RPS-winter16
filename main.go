@@ -21,25 +21,43 @@ For two people to play, we want to call the server function once and client func
 We will also need to diffrentiate between the two clients based on their computer assigned port values.
 */
 func main() {
-	//Playing against Ashwarya
 	/*
 	John's IP Address: 169.229.50.175
 	John's Port: 6421
 	Ashwarya's IP Address: 169.229.50.188
 	Ashwarya'as IP Address: 8333
 	*/
-	//Organize this into conditionals
 
+	//Diffrentiate between which port, ipAddress to use
+	gameMode := flag.String("Game Mode", "Player", "CPU")
 	//Port + IP Address: John's then Ashwarya's
-	diff := //Diffrentiate between which port, ipAddress to use
 	port := flag.String("Port", 6421, 8333)
 	ipAddress := flag.String("IP Address", "169.229.50.175", "169.229.50.188")
-
 	//Player Type
-	player := flag.String("Player", "temp", "Please indicate whether you are a client or server")
-	opponent := flag.String("opponent", "temp", "Is your opponent a server or client?")
+	player := flag.String("Player", "temp", "Please indicate whether you are a Client or Server")
+	opponent := flag.String("opponent", "temp", "Is your opponent a Client or Server?")
 
 	flag.Parse()
+
+	if *player != "" && gameMode != "" && *opponent != "" {
+		if *gameMode == "Player" {
+			fmt.Println("Called Automatic ")
+			if *player == "server" {
+				server(*port)
+			} else if *player == "client" {
+				client(*ipAddress, *port)
+			}
+		} else if *gameMode == "CPU" {
+			if *player == "server" {
+				server(*port)
+			} else if *player == "client" {
+				client(*ipAddress, *port)
+			}
+		}
+	} else {
+		fmt.Println("Please answer all fields for the game to begin correctly")
+		return
+	}
 
 	if *player == "server" {
 		fmt.Println("Player is a server, begin interactive server");
@@ -49,6 +67,7 @@ func main() {
 	} else {
 		fmt.Println("Please enter a valid player type.")
 	}
+
 	/*
 	//If I play against myself
 	client(*JohnIPAddress, *JohnPort)
