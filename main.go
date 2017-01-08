@@ -151,12 +151,10 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 	if playerMove == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		round -= 1
-	}
-	else if playerMove == "R" && opponentMove == "S", playerMove == "S" && opponentMove == "P", playerMove == "P" && opponentMove == "R" {
+	} else if playerMove == "R" && opponentMove == "S", playerMove == "S" && opponentMove == "P", playerMove == "P" && opponentMove == "R" {
 		fmt.Println("Player wins this round!")
 		playerScore += 1
-	}
-	else {
+	} else {
 		fmt.Println("Opponent wins this round!")
 		opponentScore += 1
 	}
