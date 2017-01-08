@@ -218,11 +218,12 @@ func server(port int) {
 		} else if message == "P" {
 			sengMsg := "S\n"
 		} else if message == "S" {
-			sengMsg := "Rt\n"
+			sengMsg := "R\n"
 		}
 		fmt.Printf("(%d) Sending: %s\n", i, sengMsg) //MARK
 
-		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
+		//MARK: What should error message be here?
+		if _, err := serverConn.Write([]byte(message)); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
 		}
