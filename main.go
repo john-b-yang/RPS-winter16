@@ -4,12 +4,14 @@
  */
 package main
 
+/* Unused Packages
+"time"
+*/
 import (
 	"bufio"
 	"fmt"
 	"net"
 	"os"
-	"time"
 	"flag"
 	"math/rand"
 )
@@ -29,17 +31,17 @@ func main() {
 	*/
 
 	//Diffrentiate between which port, ipAddress to use
-	gameMode := flag.String("Game Mode", "Player", "CPU")
+	gameMode := flag.String("Game Mode", "Player", "Enter Player or CPU")
 	//Port + IP Address: John's then Ashwarya's
-	port := flag.String("Port", 6421, 8333)
-	ipAddress := flag.String("IP Address", "169.229.50.175", "169.229.50.188")
+	port := flag.Int("Port", 64218333, "6421 (John) or 8333 (Ashwarya)")
+	ipAddress := flag.String("IP Address", "", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
 	//Player Type
 	player := flag.String("Player", "temp", "Please indicate whether you are a Client or Server")
 	opponent := flag.String("opponent", "temp", "Is your opponent a Client or Server?")
 
 	flag.Parse()
 
-	if *player != "" && gameMode != "" && *opponent != "" {
+	if *player != "" && *gameMode != "" && *opponent != "" {
 		if *gameMode == "Player" {
 			fmt.Println("Called Automatic ")
 			if *player == "server" {
