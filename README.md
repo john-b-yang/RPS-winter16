@@ -1,5 +1,5 @@
 #Rock Paper Scissors
-Implementation of Rock Paper Scissors that can be played over the internetthrough the use of socket programming and the client-server model.
+Implementation of Rock Paper Scissors that can be played over the internet through the use of socket programming and the client-server model.
 
 ##Protocol:
 To be implemented
