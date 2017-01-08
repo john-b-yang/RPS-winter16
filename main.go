@@ -95,10 +95,10 @@ func client(ipAddress string, port int) {
 	} else {
 		fmt.Println("Client Connection Established")
 	}
-	reader := bufio.NewReader(clientConn)
 	//Print out connection
 	fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
 	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
+	reader := bufio.NewReader(clientConn)
 
 	numOfGames := 3 //Should this be 2? What is numOfGames, number of games to be won, or most number of games?
 	playerScore := 0
@@ -106,16 +106,19 @@ func client(ipAddress string, port int) {
 
 	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
+		recvMsg, err := reader.ReadString('\n') //Replaced err w/ _ b/c not using err
+		if err != nil {
+			fmt.Println("Error Message", err)
+			return
+		}
+
 		playerMove := askForPlay() //Retrieve Player Choice
 		opponentMove := opponentAskForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
+
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 		isGameOver := printStage(playerScore, opponentScore) //Checks whether one of the players has won
-
-		if isGameOver == true {
-			//Exit out of this loop?
-		}
-
+		
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
 	        fmt.Println("Send failed:", err)
 	        os.Exit(1)
