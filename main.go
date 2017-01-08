@@ -107,12 +107,13 @@ func client(ipAddress string, port int) {
 
 	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
-		recvMsg, err := reader.ReadString('\n') //Replaced err w/ _ b/c not using err
+		recvMsg, err := reader.ReadString('\n') //recvMsg is opponent play
 		if err != nil {
 			fmt.Println("Error reading next play: ", err)
 			return
 		}
 
+		print(recvMsg) //MARK: Using recvMsg so go build will not error
 		playerMove := askForPlay() //Retrieve Player Choice
 		opponentMove := opponentAskForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
