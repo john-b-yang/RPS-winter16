@@ -31,7 +31,7 @@ func main() {
 	player := flag.String("player", "temp", "Please indicate whether you are a Client or Server")
 	opponent := flag.String("opponent", "temp", "Is your opponent a Client or Server?")
     port := flag.Int("port", 64218333, "6421 (John) or 8333 (Ashwarya)")
-    ipAddress := flag.String("IPAddress", "", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
+    ipAddress := flag.String("ipAddress", "", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
 
 	flag.Parse()
 
@@ -107,7 +107,7 @@ func serverCPU(port int) {
 	portString := fmt.Sprintf(":%d", port)
 
 	//Listening
-	ln, err := net.Listen("tcp", portString) //Same Port Number as Client's
+	ln, err := net.Listen("tcp", portString)
 	if err != nil {
 		fmt.Println("Listen failed:", err)
 		os.Exit(1)
