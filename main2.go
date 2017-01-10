@@ -40,15 +40,15 @@ func main() {
 		if *gameMode == "Player" { //Person opponent
 			if *player == "server" {
 				fmt.Println("Starting Server in Interactive Mode")
-				server(*port) //Ash's Port
+				serverPlay(*port) //Ash's Port
 			} else if *player == "client" {
 				fmt.Println("Starting Client in Interactive Mode")
-				client(*ipAddress, *port) //Ash's IP Address + Port
+				clientPlay(*ipAddress, *port) //Ash's IP Address + Port
 			}
 		} else if *gameMode == "CPU" { //CPU opponent
 			if *player == "server" {
 				fmt.Println("Starting Server in Automatic Mode")
-				server(*port) //John's Port
+				serverCPU(*port) //John's Port
 			} else if *player == "client" {
 				fmt.Println("Starting Client in Automatic Mode")
 				clientCPU(*ipAddress, *port) //John's IP Address + Port
@@ -197,4 +197,12 @@ func printStage(playerScore int, opponentScore int) {
 	} else {
 		fmt.Println("Next Round! Current score of player vs opponent is (%d)-(%d)!", playerScore, opponentScore)
 	}
+}
+
+func clientPlay() {
+    print("Filler")
+}
+
+func serverPlay() {
+    print("Filler")
 }
