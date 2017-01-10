@@ -36,6 +36,7 @@ func main() {
 	opponent := flag.String("opponent", "temp", "Is your opponent a Client or Server?")
 
 	flag.Parse()
+	fmt.Println("Hello")
 
 	//Logic for calling client/server
 	if *player != "" && *gameMode != "" && *opponent != "" {
