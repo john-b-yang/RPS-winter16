@@ -199,7 +199,7 @@ func server(port int) {
 
 		//Sending Message
 		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
-		if _, err := serverConn.Write([]byte(sendMsg)); err != nil {
+		if _, err := serverConn.Write([]byte(playerMove)); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
 		}
