@@ -36,20 +36,23 @@ func main() {
 	opponent := flag.String("opponent", "temp", "Is your opponent a Client or Server?")
 
 	flag.Parse()
-	fmt.Println("Hello")
 
 	//Logic for calling client/server
 	if *player != "" && *gameMode != "" && *opponent != "" {
 		if *gameMode == "Player" { //Person opponent
 			if *player == "server" {
+				fmt.Println("Starting Server in Interactive Mode")
 				server(*port) //Ash's Port
 			} else if *player == "client" {
+				fmt.Println("Starting Client in Interactive Mode")
 				client(*ipAddress, *port) //Ash's IP Address + Port
 			}
 		} else if *gameMode == "CPU" { //CPU opponent
 			if *player == "server" {
+				fmt.Println("Starting Server in Automatic Mode")
 				server(*port) //John's Port
 			} else if *player == "client" {
+				fmt.Println("Starting Client in Automatic Mode")
 				client(*ipAddress, *port) //John's IP Address + Port
 			}
 		}
