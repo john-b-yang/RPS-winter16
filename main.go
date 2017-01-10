@@ -198,7 +198,6 @@ func server(port int) {
 		printStage(playerScore, opponentScore)
 
 		//Sending Message
-		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
 		if _, err := serverConn.Write([]byte(playerMove)); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
