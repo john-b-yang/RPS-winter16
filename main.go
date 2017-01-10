@@ -16,6 +16,8 @@ import (
 	"math/rand"
 )
 
+//Command Line Prompt: ./main -gameMode=CPU -port=6421 -ipAddress=169.229.50.175 -player=client
+
 func main() {
 	/*
 	John's IP Address: 169.229.50.175
@@ -92,9 +94,8 @@ func client(ipAddress string, port int) {
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 		isGameOver := printStage(playerScore, opponentScore) //Checks whether one of the players has won
 
-		//MARK: Is this necessary + How to check if game is over
 		if isGameOver {
-			print("TBD: Game Over Message")
+			os.Exit(1)
 		}
 		/*********/
 
@@ -124,7 +125,7 @@ func askForPlay() string {
 	}
 }
 
-//Automatic Opponent (So not a client)
+//Automatic Opponent (For Automatic Mode)
 func opponentAskForPlay() string {
 	moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
 	return moveDictionary[rand.Intn(3)]
@@ -154,9 +155,10 @@ func printStage(playerScore int, opponentScore int) bool  {
 		fmt.Printf("Opponent wins the game by a score of (%d)-(%d)!", opponentScore, playerScore)
 		return true
 	} else {
-		fmt.Println("Next Round!")
+		fmt.Println("Next Round! Current score of player vs opponent is (%d)-(%d)!", playerScore, opponentScore)
 		return false
 	}
+	return false
 }
 
 func server(port int) {
@@ -167,8 +169,6 @@ func server(port int) {
 	if err != nil {
 		fmt.Println("Listen failed:", err)
 		os.Exit(1)
-	} else {
-		fmt.Println("Listening Passed")
 	}
 
 	//Accepting
@@ -180,26 +180,22 @@ func server(port int) {
 	reader := bufio.NewReader(serverConn)
 
 	numOfGames := 3
+	playerScore := 0
+	opponentScore := 0
+
 	for i := 0; i < numOfGames; i++ {
 		//Received Message
 		recvMsgBytes, err := reader.ReadBytes('\n')
 		if err != nil {
 			fmt.Println("Receive failed:", err)
 			os.Exit(1)
-		} else {
-			fmt.Printf("(%d) Received: %s", i, string(recvMsgBytes))
 		}
 
-		//Sending Message, to be modified for RPS
-		message := string(recvMsgBytes)
-		var sendMsg string = "Nil Message\n"
-		if message == "R" {
-			sendMsg = "P\n"
-		} else if message == "P" {
-			sendMsg = "S\n"
-		} else if message == "S" {
-			sendMsg = "R\n"
-		}
+		opponentMove := string(recvMsgBytes)
+		playerMove := opponentAskForPlay()
+		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
+		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
+		printStage(playerScore, opponentScore)
 
 		//Sending Message
 		fmt.Printf("(%d) Sending: %s\n", i, sendMsg) //MARK
