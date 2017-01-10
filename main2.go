@@ -199,10 +199,10 @@ func printStage(playerScore int, opponentScore int) {
 	}
 }
 
-func clientPlay() {
+func clientPlay(ipAddress string, port int) {
     print("Filler")
 }
 
-func serverPlay() {
+func serverPlay(port int) {
     print("Filler")
 }
