@@ -28,10 +28,10 @@ func main() {
 
 	//Parameters
 	gameMode := flag.String("gameMode", "Player", "Enter Player or CPU")
-	port := flag.Int("port", 64218333, "6421 (John) or 8333 (Ashwarya)")
-	ipAddress := flag.String("IPAddress", "", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
 	player := flag.String("player", "temp", "Please indicate whether you are a Client or Server")
 	opponent := flag.String("opponent", "temp", "Is your opponent a Client or Server?")
+    port := flag.Int("port", 64218333, "6421 (John) or 8333 (Ashwarya)")
+    ipAddress := flag.String("IPAddress", "", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
 
 	flag.Parse()
 
@@ -51,7 +51,7 @@ func main() {
 				server(*port) //John's Port
 			} else if *player == "client" {
 				fmt.Println("Starting Client in Automatic Mode")
-				client(*ipAddress, *port) //John's IP Address + Port
+				clientCPU(*ipAddress, *port) //John's IP Address + Port
 			}
 		}
 	} else { //Error Message
@@ -60,7 +60,7 @@ func main() {
 	}
 }
 
-func client(ipAddress string, port int) {
+func clientCPU(ipAddress string, port int) {
 	iPAddPort := fmt.Sprintf("%s:%d", ipAddress, port) //Concatenating ipAddress and port number
 	clientConn, err := net.Dial("tcp", iPAddPort) //Create and test client connection
 	if err != nil {
@@ -87,19 +87,12 @@ func client(ipAddress string, port int) {
 		}
 
 		//Game Logic
-		/*********/
-		print(recvMsg) //MARK: Using recvMsg so go build will not error
 		playerMove := askForPlay() //Retrieve Player Choice
-		opponentMove := opponentAskForPlay()
+		opponentMove := recvMsg
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
 
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
-		isGameOver := printStage(playerScore, opponentScore) //Checks whether one of the players has won
-
-		if isGameOver {
-			os.Exit(1)
-		}
-		/*********/
+		printStage(playerScore, opponentScore) //Checks whether one of the players has won
 
 		//Sending Message
 		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
@@ -110,7 +103,7 @@ func client(ipAddress string, port int) {
 	clientConn.Close()
 }
 
-func server(port int) {
+func serverCPU(port int) {
 	portString := fmt.Sprintf(":%d", port)
 
 	//Listening
@@ -127,7 +120,6 @@ func server(port int) {
 		os.Exit(1)
 	}
 	reader := bufio.NewReader(serverConn)
-
 	numOfGames := 3
 	playerScore := 0
 	opponentScore := 0
@@ -141,7 +133,7 @@ func server(port int) {
 		}
 
 		opponentMove := string(recvMsgBytes)
-		playerMove := opponentAskForPlay()
+		playerMove := askForPlay()
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
 		printStage(playerScore, opponentScore)
@@ -155,6 +147,7 @@ func server(port int) {
 	serverConn.Close()
 }
 
+/***************************/
 /* Client Helper Functions */
 
 //Prompt user for play
@@ -194,16 +187,14 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 }
 
 //
-func printStage(playerScore int, opponentScore int) bool  {
+func printStage(playerScore int, opponentScore int) {
 	if playerScore == 2 {
 		fmt.Printf("Player wins the game by a score of (%d)-(%d)!", playerScore, opponentScore)
-		return true
+		os.Exit(1)
 	} else if opponentScore == 2 {
 		fmt.Printf("Opponent wins the game by a score of (%d)-(%d)!", opponentScore, playerScore)
-		return true
+		os.Exit(1)
 	} else {
 		fmt.Println("Next Round! Current score of player vs opponent is (%d)-(%d)!", playerScore, opponentScore)
-		return false
 	}
-	return false
 }
