@@ -56,7 +56,6 @@ func main() {
 		}
 	} else { //Error Message
 		fmt.Println("Please answer all fields for the game to begin correctly")
-		return
 	}
 }
 
