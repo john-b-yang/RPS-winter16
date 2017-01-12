@@ -72,33 +72,39 @@ func clientCPU(ipAddress string, port int) {
 		fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 	}
 
-	reader := bufio.NewReader(clientConn)
+	tempMove := opponentAskForPlay()
+	if _, err := clientConn.Write([]byte(tempMove + "\n")); err != nil {
+		fmt.Println("Send failed:", err)
+		os.Exit(1)
+	}
+
 	numOfGames := 3 //Should this be 2? numOfGames = # of games to be won OR most # of games?
 	playerScore := 0
 	opponentScore := 0
 
 	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
+		reader := bufio.NewReader(clientConn)
 		//Receiving Message
-		recvMsg, err := reader.ReadString('\n') //recvMsg is opponent play
+		recvMsgBytes, err := reader.ReadBytes('\n') //recvMsg is opponent play
 		if err != nil {
-			fmt.Println("Error reading next play: ", err)
+			fmt.Println("Error reading opponent play: ", err)
 			return
 		}
 
 		//Game Logic
 		playerMove := askForPlay() //Retrieve Player Choice
-		opponentMove := recvMsg
+		opponentMove := string(recvMsgBytes)
+		if _, err := clientConn.Write([]byte(playerMove + "\n")); err != nil {
+			fmt.Println("Send failed:", err)
+			os.Exit(1)
+		}
 		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
 
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 		printStage(playerScore, opponentScore) //Checks whether one of the players has won
 
 		//Sending Message
-		if _, err := clientConn.Write([]byte(playerMove)); err != nil {
-	        fmt.Println("Send failed:", err)
-	        os.Exit(1)
-	    }
 	}
 	clientConn.Close()
 }
@@ -119,12 +125,19 @@ func serverCPU(port int) {
 		fmt.Println("Accept failed:", err)
 		os.Exit(1)
 	}
-	reader := bufio.NewReader(serverConn)
+
+	tempMove := opponentAskForPlay()
+	if _, err := serverConn.Write([]byte(tempMove + "\n")); err != nil {
+		fmt.Println("Send failed:", err)
+		os.Exit(1)
+	}
+
 	numOfGames := 3
 	playerScore := 0
 	opponentScore := 0
 
 	for i := 0; i < numOfGames; i++ {
+		reader := bufio.NewReader(serverConn)
 		//Received Message
 		recvMsgBytes, err := reader.ReadBytes('\n')
 		if err != nil {
@@ -134,15 +147,16 @@ func serverCPU(port int) {
 
 		opponentMove := string(recvMsgBytes)
 		playerMove := askForPlay()
-		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
-		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
-		printStage(playerScore, opponentScore)
 
 		//Sending Message
-		if _, err := serverConn.Write([]byte(playerMove)); err != nil {
+		if _, err := serverConn.Write([]byte(playerMove + "\n")); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
 		}
+
+		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
+		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
+		printStage(playerScore, opponentScore)
 	}
 	serverConn.Close()
 }
