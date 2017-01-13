@@ -197,10 +197,10 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 //
 func printStage(playerScore int, opponentScore int) {
 	if playerScore == 2 {
-		fmt.Printf("Player wins the game by a score of (%d)-(%d)!", playerScore, opponentScore)
+		fmt.Printf("Player wins the game by a score of %d-%d!", playerScore, opponentScore)
 		os.Exit(1)
 	} else if opponentScore == 2 {
-		fmt.Printf("Opponent wins the game by a score of (%d)-(%d)!", opponentScore, playerScore)
+		fmt.Printf("Opponent wins the game by a score of %d-%d!", opponentScore, playerScore)
 		os.Exit(1)
 	} else {
 		fmt.Println("Next Round! Current score of player vs opponent is (%d)-(%d)!", playerScore, opponentScore)
