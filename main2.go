@@ -147,7 +147,7 @@ func serverCPU(port int) {
 			os.Exit(1)
 		}
 
-		fmt.Println("Player picked ", playerMove, " opponent picked ", opponentMove, ". ")
+		fmt.Println("Player picked", playerMove, "opponent picked", opponentMove, ". ")
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
 		printStage(playerScore, opponentScore)
 	}
@@ -181,7 +181,6 @@ func opponentAskForPlay() string {
 //Determine the winner of a given round
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) {
 	round += 1
-	fmt.Println("Moves: ", playerMove, " ", opponentMove)
 	if playerMove == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		round -= 1
