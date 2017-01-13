@@ -69,19 +69,16 @@ func clientCPU(ipAddress string, port int) {
 	if err != nil {
 		fmt.Println("Client Connection Error: ", err)
 		return
-	} else {
-		//Print out connection
-		fmt.Fprintf(clientConn, "GET / HTTP/1.0\r\n\r\n")
-		fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 	}
+	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
 
-	numOfGames := 3 //Should this be 2? numOfGames = # of games to be won OR most # of games?
+	numOfGames := 3
 	playerScore := 0
 	opponentScore := 0
 
 	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
-
+		fmt.Println("Beginning Loop!")
 		playerMove := opponentAskForPlay() //Retrieve Player Choice
 
 		if _, err := clientConn.Write([]byte(playerMove + "\n")); err != nil {
@@ -96,6 +93,8 @@ func clientCPU(ipAddress string, port int) {
 		if err != nil {
 			fmt.Println("Error reading opponent play: ", err)
 			return
+		} else {
+			fmt.Println("No error reading opponent's play")
 		}
 
 		opponentMove := string(recvMsgBytes)
@@ -194,16 +193,15 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 	}
 }
 
-//
 func printStage(playerScore int, opponentScore int) {
 	if playerScore == 2 {
-		fmt.Printf("Player wins the game by a score of %d-%d!", playerScore, opponentScore)
+		fmt.Printf("Player wins the game by a score of ", playerScore, "-", opponentScore, "!")
 		os.Exit(1)
 	} else if opponentScore == 2 {
-		fmt.Printf("Opponent wins the game by a score of %d-%d!", opponentScore, playerScore)
+		fmt.Printf("Opponent wins the game by a score of ", opponentScore, "-", playerScore, "!")
 		os.Exit(1)
 	} else {
-		fmt.Println("Next Round! Current score of player vs opponent is (%d)-(%d)!", playerScore, opponentScore)
+		fmt.Println("Next Round! Current score of player vs opponent is ", playerScore, "-", opponentScore, "!")
 	}
 }
 
