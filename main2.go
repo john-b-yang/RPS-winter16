@@ -181,6 +181,7 @@ func opponentAskForPlay() string {
 //Determine the winner of a given round
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) {
 	round += 1
+	fmt.Println("Determine Round Winner Entered", playerMove, opponentMove)
 	if playerMove == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		round -= 1
