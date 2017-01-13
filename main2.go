@@ -104,7 +104,7 @@ func clientCPU(ipAddress string, port int) {
 		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 		printStage(playerScore, opponentScore) //Checks whether one of the players has won
 
-		time.Sleep(2 * time.second)
+		time.Sleep(2 * time.Second)
 	}
 	clientConn.Close()
 }
