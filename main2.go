@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-//Command Line Prompt: ./main -gameMode=CPU -port=6421 -ipAddress=169.229.50.175 -player=client
+//Command Line Prompt: ./main -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=client
 
 func main() {
 	/*
@@ -48,15 +48,15 @@ func main() {
 			}
 		} else if *gameMode == "CPU" { //CPU opponent
 			/*
-				In automatic mode, the way it is currently configured, the
-				server will always win. Originally, I wrote the code so that
-				both client and server would call the opponentAskForPlay()
-				function which would generate a random number => random move
-				However, since the ipAddress for the computers were the same,
-				and computers are pseudo-random (time factor), they kept generating
-				the same numbers, and therefore, the same moves, so instead, I wrote
-				a function opponentAskForPlay2() that would generate a move with
+				In automatic mode, the way it is currently configured, the server will always win. Originally, I wrote the code so that
+				both client and server would call the opponentAskForPlay() function which would generate a random number => random move
+				However, since the ipAddress for the computers were the same, and computers are pseudo-random (time factor), they kept generating
+				the same numbers, and therefore, the same moves, so instead, I wrote a function opponentAskForPlay2() that would generate a move with
 				knowledge of the opponent's move.
+
+				To make the automatic mode more random, I would have to
+				1. Use different ipAddresses in the client and server calls
+				2. Change the call to "opponentAskForPlay2()" in the server method to just "opponentAskForPlay()"
 			*/
 			if *player == "server" {
 				fmt.Println("Starting Server in Automatic Mode")
@@ -190,8 +190,9 @@ func serverCPU(port int) {
 	serverConn.Close()
 }
 
-/***************************/
-/* Client Helper Functions */
+/********************/
+/* Helper Functions */
+/********************/
 
 //Prompt user for play
 func askForPlay() string {
