@@ -208,9 +208,8 @@ func clientCPU(ipAddress string, port int) {
 
 	fmt.Println("Rock, Paper, Scissors!")
 	fmt.Println("----------------------")
-	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
-		playerMove := opponentAskForPlay() //Retrieve Player Choice
+		playerMove := opponentAskForPlay()
 
 		if _, err := clientConn.Write([]byte(playerMove + "\n")); err != nil {
 			fmt.Println("Send failed:", err)
