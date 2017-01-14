@@ -197,6 +197,7 @@ func opponentAskForPlay() string {
 }
 
 //Determine the winner of a given round
+//MARK: Definitive issue with this method, comparisons not correct
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) string {
 	fmt.Println("Determine Round Winner Entered", playerMove, opponentMove)
 	if playerMove == opponentMove {
@@ -213,10 +214,10 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 
 func printStage(playerScore int, opponentScore int) {
 	if playerScore == 2 {
-		fmt.Printf("Player wins the game by a score of", playerScore, "-", opponentScore, "!")
+		fmt.Println("Player wins the game by a score of", playerScore, "-", opponentScore, "!")
 		os.Exit(1)
 	} else if opponentScore == 2 {
-		fmt.Printf("Opponent wins the game by a score of", opponentScore, "-", playerScore, "!")
+		fmt.Println("Opponent wins the game by a score of", opponentScore, "-", playerScore, "!")
 		os.Exit(1)
 	} else {
 		fmt.Println("Next Round! Current score of player vs opponent is", playerScore, "-", opponentScore, "!")
