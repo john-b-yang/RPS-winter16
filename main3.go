@@ -138,6 +138,7 @@ func client(ipAddress string, port int, isCPU bool) {
 	clientConn.Close()
 }
 
+//Server Function
 func server(port int, isCPU bool) {
 	portString := fmt.Sprintf(":%d", port)
 
@@ -171,6 +172,7 @@ func server(port int, isCPU bool) {
 			os.Exit(1)
 		}
 
+		//Retrieve Opponent Move and generate Player Move
 		opponentMove := string(recvMsgBytes)
 		var playerMove string = "filler"
 		if isCPU {
@@ -184,6 +186,7 @@ func server(port int, isCPU bool) {
 			os.Exit(1)
 		}
 
+		//Print Formatting
 		opponentPrint := strings.TrimSpace(opponentMove)
 		printRound := i + 1
 		fmt.Println("Game", printRound, ": Player played", playerMove, "and Opponent played", opponentPrint)
@@ -195,6 +198,9 @@ func server(port int, isCPU bool) {
 			playerScore += 1
 		} else if result == opponentMove {
 			opponentScore += 1
+		} else {
+			fmt.Println("Technical Difficulty")
+			os.Exit(1)
 		}
 
 		printStage(playerScore, opponentScore)
@@ -221,6 +227,7 @@ func opponentAskForPlay() string {
 	return moveDictionary[rand.Intn(3)]
 }
 
+//Automatic Opponent V2
 func opponentAskForPlay2(opponentMove string) string {
 	if opponentMove == "R\n" {
 		return "S"
@@ -234,25 +241,23 @@ func opponentAskForPlay2(opponentMove string) string {
 }
 
 //Determine the winner of a given round
-//MARK: Definitive issue with this method, comparisons not correct
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) string {
-	// fmt.Println("Determine Round Winner Entered")
-	// fmt.Println("s", playerMove, "s")
-	// fmt.Println("s", opponentMove, "s")
-	// check := (playerMove + "\n") == opponentMove
-	// fmt.Println(check)
 	if playerMove + "\n" == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		return "tie"
 	} else if (playerMove == "R" && opponentMove == "S\n") || (playerMove == "S" && opponentMove == "P\n") || (playerMove == "P" && opponentMove == "R\n") {
 		fmt.Println("Player wins this round!")
 		return playerMove
-	} else {
+	} else if (playerMove == "S" && opponentMove == "R\n") || (playerMove == "P" && opponentMove == "S\n") || (playerMove == "R" && opponentMove == "P\n") {
 		fmt.Println("Opponent wins this round!")
 		return opponentMove
+	} else {
+		fmt.Println("Error in determining round result.")
+		os.Exit(1)
 	}
 }
 
+//Print out the point in game flow after a round is complete
 func printStage(playerScore int, opponentScore int) {
 	if playerScore == 2 {
 		fmt.Println("Player wins the game by a score of", playerScore, "-", opponentScore, "!")
