@@ -148,7 +148,7 @@ func serverCPU(port int) {
 		}
 
 		opponentMove := string(recvMsgBytes)
-		playerMove := opponentAskForPlay()
+		playerMove := opponentAskForPlay2(opponentMove)
 
 		//Sending Message
 		if _, err := serverConn.Write([]byte(playerMove + "\n")); err != nil {
@@ -194,6 +194,18 @@ func askForPlay() string {
 func opponentAskForPlay() string {
 	moveDictionary := map[int]string {0: "R", 1: "P", 2: "S"}
 	return moveDictionary[rand.Intn(3)]
+}
+
+func opponentAskForPlay2(opponentMove string) string {
+	if opponentMove == "R\n" {
+		return "S"
+	} else if opponentMove == "P\n" {
+		return "R"
+	} else if opponentMove == "S\n" {
+		return "P"
+	} else {
+		return opponentAskForPlay()
+	}
 }
 
 //Determine the winner of a given round
