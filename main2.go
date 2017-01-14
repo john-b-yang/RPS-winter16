@@ -199,15 +199,15 @@ func opponentAskForPlay() string {
 //Determine the winner of a given round
 //MARK: Definitive issue with this method, comparisons not correct
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) string {
-	fmt.Println("Determine Round Winner Entered")
-	fmt.Println("s", playerMove, "s")
-	fmt.Println("s", opponentMove, "s")
+	// fmt.Println("Determine Round Winner Entered")
+	// fmt.Println("s", playerMove, "s")
+	// fmt.Println("s", opponentMove, "s")
 	check := (playerMove + "\n") == opponentMove
 	fmt.Println(check)
-	if playerMove == opponentMove {
+	if playerMove + "\n" == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		return "tie"
-	} else if (playerMove == "R" && opponentMove == "S") || (playerMove == "S" && opponentMove == "P") || (playerMove == "P" && opponentMove == "R") {
+	} else if (playerMove == "R\n" && opponentMove == "S") || (playerMove == "S\n" && opponentMove == "P") || (playerMove == "P\n" && opponentMove == "R") {
 		fmt.Println("Player wins this round!")
 		return playerMove
 	} else {
