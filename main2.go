@@ -200,6 +200,8 @@ func opponentAskForPlay() string {
 //MARK: Definitive issue with this method, comparisons not correct
 func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) string {
 	fmt.Println("Determine Round Winner Entered")
+	fmt.Println("s", playerMove, "s")
+	fmt.Println("s", opponentMove, "s")
 	check := playerMove == opponentMove
 	fmt.Println(check)
 	if playerMove == opponentMove {
