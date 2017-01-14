@@ -98,7 +98,7 @@ func clientCPU(ipAddress string, port int) {
 		}
 
 		opponentMove := string(recvMsgBytes)
-		fmt.Println("Player picked", playerMove, "opponent picked", opponentMove)
+		fmt.Printf("Game (%d) Player played (%s) and Opponent played (%s)", round, playerMove, opponentMove)
 
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 
@@ -156,7 +156,7 @@ func serverCPU(port int) {
 			os.Exit(1)
 		}
 
-		fmt.Println("Player picked", playerMove, "opponent picked", opponentMove)
+		fmt.Printf("Game (%d) Player played (%s) and Opponent played (%s)", i, playerMove, opponentMove)
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
 
 		if result == "tie" {
