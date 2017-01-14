@@ -129,6 +129,9 @@ func client(ipAddress string, port int, isCPU bool) {
 			playerScore += 1
 		} else if result == opponentMove {
 			opponentScore += 1
+		} else if result == "error" {
+			fmt.Println("Technical Difficulty")
+			os.Exit(1)
 		}
 
 		printStage(playerScore, opponentScore) //Checks whether one of the players has won
@@ -198,7 +201,7 @@ func server(port int, isCPU bool) {
 			playerScore += 1
 		} else if result == opponentMove {
 			opponentScore += 1
-		} else {
+		} else if result == "error" {
 			fmt.Println("Technical Difficulty")
 			os.Exit(1)
 		}
@@ -253,7 +256,7 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 		return opponentMove
 	} else {
 		fmt.Println("Error in determining round result.")
-		os.Exit(1)
+		return "error"
 	}
 }
 
