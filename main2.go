@@ -95,13 +95,12 @@ func clientCPU(ipAddress string, port int) {
 		if err != nil {
 			fmt.Println("Error reading opponent play: ", err)
 			return
-		} else {
-			fmt.Println("No error reading opponent's play")
 		}
 
 		opponentMove := string(recvMsgBytes)
 		opponentPrint := strings.TrimSpace(opponentMove)
-		fmt.Println("Game", round, ": Player played", playerMove, "and Opponent played", opponentPrint)
+		printRound := round + 1
+		fmt.Println("Game", printRound, ": Player played", playerMove, "and Opponent played", opponentPrint)
 
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 
@@ -114,7 +113,7 @@ func clientCPU(ipAddress string, port int) {
 		}
 
 		printStage(playerScore, opponentScore) //Checks whether one of the players has won
-
+		fmt.Println("----------------------")
 		time.Sleep(2 * time.Second)
 	}
 	clientConn.Close()
@@ -161,8 +160,8 @@ func serverCPU(port int) {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
 		}
-
-		fmt.Println("Game", i, ": Player played", playerMove, "and Opponent played", opponentPrint)
+		printRound := i + 1
+		fmt.Println("Game", printRound, ": Player played", playerMove, "and Opponent played", opponentPrint)
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
 
 		if result == "tie" {
@@ -174,6 +173,7 @@ func serverCPU(port int) {
 		}
 
 		printStage(playerScore, opponentScore)
+		fmt.Println("----------------------")
 	}
 	serverConn.Close()
 }
