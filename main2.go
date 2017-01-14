@@ -12,6 +12,7 @@ import (
 	"flag"
 	"math/rand"
 	"time"
+	"strings"
 )
 
 //Command Line Prompt: ./main -gameMode=CPU -port=6421 -ipAddress=169.229.50.175 -player=client
@@ -76,9 +77,10 @@ func clientCPU(ipAddress string, port int) {
 	playerScore := 0
 	opponentScore := 0
 
+	fmt.Println("Rock, Paper, Scissors!")
+	fmt.Println("----------------------")
 	//Figure out how to terminate this loop
     for round := 0; round < numOfGames; round++ {
-		fmt.Println("Beginning Loop!")
 		playerMove := opponentAskForPlay() //Retrieve Player Choice
 
 		if _, err := clientConn.Write([]byte(playerMove + "\n")); err != nil {
@@ -98,7 +100,8 @@ func clientCPU(ipAddress string, port int) {
 		}
 
 		opponentMove := string(recvMsgBytes)
-		fmt.Printf("Game (%d) Player played (%s) and Opponent played (%s)", round, playerMove, opponentMove)
+		opponentPrint := strings.TrimSpace(opponentMove)
+		fmt.Println("Game", round, ": Player played", playerMove, "and Opponent played", opponentPrint)
 
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
 
@@ -139,6 +142,8 @@ func serverCPU(port int) {
 	playerScore := 0
 	opponentScore := 0
 
+	fmt.Println("Rock, Paper, Scissors!")
+	fmt.Println("----------------------")
 	for i := 0; i < numOfGames; i++ {
 		//Received Message
 		recvMsgBytes, err := reader.ReadBytes('\n')
@@ -148,6 +153,7 @@ func serverCPU(port int) {
 		}
 
 		opponentMove := string(recvMsgBytes)
+		opponentPrint := strings.TrimSpace(opponentMove)
 		playerMove := opponentAskForPlay2(opponentMove)
 
 		//Sending Message
@@ -156,7 +162,7 @@ func serverCPU(port int) {
 			os.Exit(1)
 		}
 
-		fmt.Printf("Game (%d) Player played (%s) and Opponent played (%s)", i, playerMove, opponentMove)
+		fmt.Println("Game", i, ": Player played", playerMove, "and Opponent played", opponentPrint)
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
 
 		if result == "tie" {
