@@ -47,6 +47,17 @@ func main() {
 				fmt.Println("Please enter an appropriate player type")
 			}
 		} else if *gameMode == "CPU" { //CPU opponent
+			/*
+				In automatic mode, the way it is currently configured, the
+				server will always win. Originally, I wrote the code so that
+				both client and server would call the opponentAskForPlay()
+				function which would generate a random number => random move
+				However, since the ipAddress for the computers were the same,
+				and computers are pseudo-random (time factor), they kept generating
+				the same numbers, and therefore, the same moves, so instead, I wrote
+				a function opponentAskForPlay2() that would generate a move with
+				knowledge of the opponent's move.
+			*/
 			if *player == "server" {
 				fmt.Println("Starting Server in Automatic Mode")
 				serverCPU(*port) //John's Port
@@ -226,7 +237,7 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 	if playerMove + "\n" == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		return "tie"
-	} else if (playerMove == "R\n" && opponentMove == "S") || (playerMove == "S\n" && opponentMove == "P") || (playerMove == "P\n" && opponentMove == "R") {
+	} else if (playerMove == "R" && opponentMove == "S\n") || (playerMove == "S" && opponentMove == "P\n") || (playerMove == "P" && opponentMove == "R\n") {
 		fmt.Println("Player wins this round!")
 		return playerMove
 	} else {
