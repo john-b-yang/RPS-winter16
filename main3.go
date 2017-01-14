@@ -174,9 +174,9 @@ func server(port int, isCPU bool) {
 		opponentMove := string(recvMsgBytes)
 		var playerMove string = "filler"
 		if isCPU {
-			playerMove = askForPlay()
-		} else {
 			playerMove = opponentAskForPlay2(opponentMove)
+		} else {
+			playerMove = askForPlay()
 		}
 		//Sending Message
 		if _, err := serverConn.Write([]byte(playerMove + "\n")); err != nil {
