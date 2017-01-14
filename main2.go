@@ -15,8 +15,14 @@ import (
 	"strings"
 )
 
-//Command Line Prompt: ./main2 -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=client -opponent=client
-
+/* Command Line Prompts:
+	For CPU/Automatic Mode:
+		-Client: ./main2 -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=client -opponent=client
+		-Server: ./main2 -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=server -opponent=client
+	For Player/Interactive Mode:
+		-Client: ./main2 -gameMode=player -port=6421 -ipAddress=127.0.0.1 -player=client -opponent=client
+		-Server: ./main2 -gameMode=player -port=6421 -ipAddress=127.0.0.1 -player=server -opponent=client
+*/
 func main() {
 	/*
 	John's IP Address: 169.229.50.175
