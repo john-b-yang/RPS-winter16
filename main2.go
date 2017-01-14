@@ -317,17 +317,22 @@ func serverCPU(port int) {
 
 //Prompt user for play
 func askForPlay() string {
-	for {
-		fmt.Println("Please type in R (Rock), P (Paper), or S (Scissors)")
-		playPointer := flag.String("Play", "None", "Enter R, P, or S")
-		flag.Parse()
+	// for {
+	// 	fmt.Println("Please type in R (Rock), P (Paper), or S (Scissors)")
+	// 	playPointer := flag.String("Play", "None", "Enter R, P, or S")
+	// 	flag.Parse()
+	//
+	// 	if *playPointer != "R" && *playPointer != "P" && *playPointer != "S" {
+	// 		fmt.Println("Your choice cannot be interpretted")
+	// 	} else {
+	// 		return *playPointer
+	// 	}
+	// }
 
-		if *playPointer != "R" && *playPointer != "P" && *playPointer != "S" {
-			fmt.Println("Your choice cannot be interpretted")
-		} else {
-			return *playPointer
-		}
-	}
+	fmt.Println("Please type in R (Rock), P (Paper), or S (Scissors)")
+	var play string
+	fmt.Scanln(&play)
+	return play
 }
 
 //Automatic Opponent (For Automatic Mode)
