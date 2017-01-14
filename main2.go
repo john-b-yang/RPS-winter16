@@ -71,7 +71,7 @@ func clientCPU(ipAddress string, port int) {
 		fmt.Println("Client Connection Error: ", err)
 		return
 	}
-	fmt.Println("Client Connection Established Successfully, Get Ready to Play!")
+	fmt.Println("Client Connection Established Successfully, Get Ready to Play!\n")
 
 	numOfGames := 3
 	playerScore := 0
@@ -135,6 +135,7 @@ func serverCPU(port int) {
 		fmt.Println("Accept failed:", err)
 		os.Exit(1)
 	}
+	fmt.Println("Server Connection Established Successfully, Get Ready to Play!\n")
 
 	reader := bufio.NewReader(serverConn)
 	numOfGames := 3
