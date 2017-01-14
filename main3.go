@@ -35,12 +35,11 @@ func main() {
 	gameMode := flag.String("gameMode", "filler", "Enter Player or CPU")
 	player := flag.String("player", "filler", "Please indicate whether you are a Client or Server")
     port := flag.Int("port", 6421, "6421 (John) or 8333 (Ashwarya)")
-    ipAddress := flag.String("ipAddress", "169.229.50.175", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
-
+    ipAddress := flag.String("ipAddress", "127.0.0.1", "169.229.50.175 (John) or 169.229.50.188 (Ashwarya)")
 	flag.Parse()
 
 	//Logic for calling client/server
-	if *player != "filler" && *gameMode != "filler" && *opponent != "filler" {
+	if *player != "filler" && *gameMode != "filler" {
 		if *gameMode == "player" { //Person opponent
 			if *player == "server" {
 				fmt.Println("Starting Server in Interactive Mode")
