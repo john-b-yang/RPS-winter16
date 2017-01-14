@@ -100,7 +100,16 @@ func clientCPU(ipAddress string, port int) {
 		opponentMove := string(recvMsgBytes)
 		fmt.Println("Player picked", playerMove, "opponent picked", opponentMove, ".")
 
-		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
+		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
+
+		if result == "tie" {
+			round -= 1
+		} else if result == playerMove {
+			playerScore += 1
+		} else if result == opponentMove {
+			opponentScore += 1
+		}
+
 		printStage(playerScore, opponentScore) //Checks whether one of the players has won
 
 		time.Sleep(2 * time.Second)
@@ -148,7 +157,16 @@ func serverCPU(port int) {
 		}
 
 		fmt.Println("Player picked", playerMove, "opponent picked", opponentMove, ".")
-		determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
+		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
+
+		if result == "tie" {
+			i -= 1
+		} else if result == playerMove {
+			playerScore += 1
+		} else if result == opponentMove {
+			opponentScore += 1
+		}
+
 		printStage(playerScore, opponentScore)
 	}
 	serverConn.Close()
@@ -179,30 +197,29 @@ func opponentAskForPlay() string {
 }
 
 //Determine the winner of a given round
-func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) {
-	round += 1
+func determineRoundWinner(playerMove string, opponentMove string, playerScore int, opponentScore int, round int) string {
 	fmt.Println("Determine Round Winner Entered", playerMove, opponentMove)
 	if playerMove == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
-		round -= 1
+		return "tie"
 	} else if (playerMove == "R" && opponentMove == "S") || (playerMove == "S" && opponentMove == "P") || (playerMove == "P" && opponentMove == "R") {
 		fmt.Println("Player wins this round!")
-		playerScore += 1
+		return playerMove
 	} else {
 		fmt.Println("Opponent wins this round!")
-		opponentScore += 1
+		return opponentMove
 	}
 }
 
 func printStage(playerScore int, opponentScore int) {
 	if playerScore == 2 {
-		fmt.Printf("Player wins the game by a score of ", playerScore, "-", opponentScore, "!")
+		fmt.Printf("Player wins the game by a score of", playerScore, "-", opponentScore, "!")
 		os.Exit(1)
 	} else if opponentScore == 2 {
-		fmt.Printf("Opponent wins the game by a score of ", opponentScore, "-", playerScore, "!")
+		fmt.Printf("Opponent wins the game by a score of", opponentScore, "-", playerScore, "!")
 		os.Exit(1)
 	} else {
-		fmt.Println("Next Round! Current score of player vs opponent is ", playerScore, "-", opponentScore, "!")
+		fmt.Println("Next Round! Current score of player vs opponent is", playerScore, "-", opponentScore, "!")
 	}
 }
 
