@@ -214,8 +214,8 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 	// fmt.Println("Determine Round Winner Entered")
 	// fmt.Println("s", playerMove, "s")
 	// fmt.Println("s", opponentMove, "s")
-	check := (playerMove + "\n") == opponentMove
-	fmt.Println(check)
+	// check := (playerMove + "\n") == opponentMove
+	// fmt.Println(check)
 	if playerMove + "\n" == opponentMove {
 		fmt.Println("Draw! An extra game will be played!")
 		return "tie"
