@@ -15,7 +15,7 @@ import (
 	"strings"
 )
 
-//Command Line Prompt: ./main -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=client
+//Command Line Prompt: ./main2 -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=client -opponent=client
 
 func main() {
 	/*
@@ -73,6 +73,120 @@ func main() {
 	} else { //Error Message
 		fmt.Println("Please answer all fields for the game to begin correctly")
 	}
+}
+
+func clientPlay(ipAddress string, port int) {
+	ipAddPort := fmt.Sprintf("%s:%d", ipAddress, port) //Concatenating ipAddress and port number
+	clientConn, err := net.Dial("tcp", ipAddPort) //Create and test client connection
+	if err != nil {
+		fmt.Println("Client Connection Error: ", err)
+		return
+	}
+	fmt.Println("Client Connection Established Successfully, Get Ready to Play!\n")
+
+	numOfGames := 3
+	playerScore := 0
+	opponentScore := 0
+
+	fmt.Println("Rock, Paper, Scissors!")
+	fmt.Println("----------------------")
+	for round := 0; round < numOfGames; round++ {
+		playerMove := askForPlay()
+
+		if _, err := clientConn.Write([]byte(playerMove + "\n")); err != nil {
+			fmt.Println("Send failed:", err)
+			os.Exit(1)
+		}
+
+		reader := bufio.NewReader(clientConn)
+		//Receiving Message
+		recvMsgBytes, err := reader.ReadBytes('\n') //recvMsg is opponent play
+
+		if err != nil {
+			fmt.Println("Error reading opponent play: ", err)
+			return
+		}
+
+		opponentMove := string(recvMsgBytes)
+		opponentPrint := strings.TrimSpace(opponentMove)
+		printRound := round + 1
+		fmt.Println("Game", printRound, ": Player played", playerMove, "and Opponent played", opponentPrint)
+
+		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, round) //Increment round number accordingly
+
+		if result == "tie" {
+			round -= 1
+		} else if result == playerMove {
+			playerScore += 1
+		} else if result == opponentMove {
+			opponentScore += 1
+		}
+
+		printStage(playerScore, opponentScore) //Checks whether one of the players has won
+		fmt.Println("----------------------")
+		time.Sleep(2 * time.Second)
+	}
+	clientConn.Close()
+}
+
+func serverPlay(port int) {
+	portString := fmt.Sprintf(":%d", port)
+
+	//Listening
+	ln, err := net.Listen("tcp", portString)
+	if err != nil {
+		fmt.Println("Listen failed:", err)
+		os.Exit(1)
+	}
+
+	//Accepting
+	serverConn, err := ln.Accept()
+	if err != nil {
+		fmt.Println("Accept failed:", err)
+		os.Exit(1)
+	}
+	fmt.Println("Server Connection Established Successfully, Get Ready to Play!\n")
+
+	reader := bufio.NewReader(serverConn)
+	numOfGames := 3
+	playerScore := 0
+	opponentScore := 0
+
+	fmt.Println("Rock, Paper, Scissors!")
+	fmt.Println("----------------------")
+	for i := 0; i < numOfGames; i++ {
+		recvMsgBytes, err := reader.ReadBytes('\n')
+		if err != nil {
+			fmt.Println("Receive failed:", err)
+			os.Exit(1)
+		}
+		opponentMove := string(recvMsgBytes)
+		playerMove := askForPlay()
+
+		//Sending Message
+		if _, err := serverConn.Write([]byte(playerMove + "\n")); err != nil {
+			fmt.Println("Send failed:", err)
+			os.Exit(1)
+		}
+
+		opponentPrint := strings.TrimSpace(opponentMove)
+		printRound := i + 1
+		fmt.Println("Game", printRound, ": Player played", playerMove, "and Opponent played", opponentPrint)
+
+		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
+
+		if result == "tie" {
+			i -= 1
+		} else if result == playerMove {
+			playerScore += 1
+		} else if result == opponentMove {
+			opponentScore += 1
+		}
+
+		printStage(playerScore, opponentScore)
+		fmt.Println("----------------------")
+	}
+	serverConn.Close()
 }
 
 func clientCPU(ipAddress string, port int) {
@@ -164,14 +278,15 @@ func serverCPU(port int) {
 		}
 
 		opponentMove := string(recvMsgBytes)
-		opponentPrint := strings.TrimSpace(opponentMove)
-		playerMove := opponentAskForPlay2(opponentMove)
 
+		playerMove := opponentAskForPlay2(opponentMove)
 		//Sending Message
 		if _, err := serverConn.Write([]byte(playerMove + "\n")); err != nil {
 			fmt.Println("Send failed:", err)
 			os.Exit(1)
 		}
+
+		opponentPrint := strings.TrimSpace(opponentMove)
 		printRound := i + 1
 		fmt.Println("Game", printRound, ": Player played", playerMove, "and Opponent played", opponentPrint)
 		result := determineRoundWinner(playerMove, opponentMove, playerScore, opponentScore, i)
@@ -257,12 +372,4 @@ func printStage(playerScore int, opponentScore int) {
 	} else {
 		fmt.Println("Next Round! Current score of player vs opponent is", playerScore, "-", opponentScore, "!")
 	}
-}
-
-func clientPlay(ipAddress string, port int) {
-    print("Filler")
-}
-
-func serverPlay(port int) {
-    print("Filler")
 }
