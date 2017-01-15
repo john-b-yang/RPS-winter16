@@ -202,7 +202,6 @@ func server(port int, isCPU bool) {
 		} else if result == opponentMove {
 			opponentScore += 1
 		} else if result == "error" {
-			fmt.Println("Technical Difficulty")
 			os.Exit(1)
 		}
 
@@ -254,8 +253,11 @@ func determineRoundWinner(playerMove string, opponentMove string, playerScore in
 	} else if (playerMove == "S" && opponentMove == "R\n") || (playerMove == "P" && opponentMove == "S\n") || (playerMove == "R" && opponentMove == "P\n") {
 		fmt.Println("Opponent wins this round!")
 		return opponentMove
+	} else if playerMove == "exit" {
+		fmt.Println("Exiting game!")
+		return "error"
 	} else {
-		fmt.Println("Error in determining round result.")
+		fmt.Println("Input was not understood. Game is terminating.")
 		return "error"
 	}
 }
