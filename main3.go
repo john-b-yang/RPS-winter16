@@ -15,6 +15,14 @@ import (
 	"strings"
 )
 
+/*
+	Things to work on
+	1. Network connection issues
+	2. Randomness: seed?
+	3. Algorithm
+	4. Accepting/Sending different types of input between Ashwarya's code and mine
+*/
+
 /* Command Line Prompts:
 	For CPU/Automatic Mode:
 		-Client: ./main2 -gameMode=CPU -port=6421 -ipAddress=127.0.0.1 -player=client
