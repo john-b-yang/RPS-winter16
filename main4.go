@@ -21,6 +21,8 @@ import (
 	2. Randomness: seed?
 	3. Algorithm
 	4. Accepting/Sending different types of input between Ashwarya's code and mine
+	5. For some reason, main2 is working but not main3
+	6. Also, game logic is an issue when playing against Ash FOR OLD VERSION YASSSS
 */
 
 /* Command Line Prompts:
@@ -108,6 +110,7 @@ func client(ipAddress string, port int, isCPU bool) {
 			playerMove = opponentAskForPlay()
 		} else {
 			playerMove = askForPlay()
+			//Parse work
 		}
 
 		if _, err := clientConn.Write([]byte(playerMove + "\n")); err != nil {
@@ -190,6 +193,7 @@ func server(port int, isCPU bool) {
 			playerMove = opponentAskForPlay2(opponentMove)
 		} else {
 			playerMove = askForPlay()
+			//Parse work
 		}
 		//Sending Message
 		if _, err := serverConn.Write([]byte(playerMove + "\n")); err != nil {
@@ -239,12 +243,31 @@ func opponentAskForPlay() string {
 
 //Automatic Opponent V2
 func opponentAskForPlay2(opponentMove string) string {
+	int randGen = rand.Intn(10);
 	if opponentMove == "rock\n" {
-		return "scissors"
+		if randGen >= 7 {
+			return "paper"
+		} else if randGen >= 2 {
+			return "rock"
+		} else {
+			return "scissors"
+		}
 	} else if opponentMove == "paper\n" {
-		return "rock"
+		if randGen >= 7 {
+			return "scissors"
+		} else if randGen >= 2 {
+			return "paper"
+		} else {
+			return "rock"
+		}
 	} else if opponentMove == "scissors\n" {
-		return "paper"
+		if randGen >= 7 {
+			return "rock"
+		} else if randGen >= 2 {
+			return "scissors"
+		} else {
+			return "paper"
+		}
 	} else {
 		return opponentAskForPlay()
 	}
