@@ -243,7 +243,7 @@ func opponentAskForPlay() string {
 
 //Automatic Opponent V2
 func opponentAskForPlay2(opponentMove string) string {
-	randGen = rand.Intn(10);
+	randGen := rand.Intn(10);
 	if opponentMove == "rock\n" {
 		if randGen >= 7 {
 			return "paper"
